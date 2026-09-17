@@ -32,7 +32,7 @@ config.set_main_option("sqlalchemy.url", database_url)
 # target_metadata = mymodel.Base.metadata
 # target_metadata = None
 from app.db.database import Base
-from app.db.models import Service
+from app.db.models import Admin, Appointment, Customer, Service  # noqa: F401
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
