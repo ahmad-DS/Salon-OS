@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://192.168.31.67:8000";
+const API_BASE_URL = process.env.EXPO_BASE_URL;
 import { AvailabilityResponse } from "../types/availability";
 import { CreateAppointmentRequest, AppointmentResponse } from "../types/appointment"
 
