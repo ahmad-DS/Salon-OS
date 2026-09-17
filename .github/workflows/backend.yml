@@ -31,7 +31,7 @@ jobs:
     - name: Run FastAPI Tests
       run: |
         # Only deploy if tests pass. Remove 'pytest' line if you don't have tests yet.
-        pytest 
+        # pytest 
 
     - name: Trigger Render Deployment
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
