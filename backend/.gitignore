@@ -3,3 +3,15 @@ venv/
 __pycache__/
 *.pyc
 .env
+
+# IDE
+.vscode/
+.idea/
+
+# Python
+*.pyo
+*.pyd
+
+# OS
+.DS_Store
+Thumbs.db
