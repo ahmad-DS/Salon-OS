@@ -1,0 +1,45 @@
+name: Mobile CI (Expo + Node 24)
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'mobile/**' # Triggers only on mobile changes
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'mobile/**'
+
+jobs:
+  mobile-check:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./mobile # Automates 'cd mobile' for all steps
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js 24
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24' # Configured for your Node 24 requirement
+        cache: 'npm' # Use 'yarn' or 'pnpm' if applicable
+        cache-dependency-path: './mobile/package-lock.json' # Adjust if using yarn.lock
+
+    - name: Setup Expo Tooling
+      uses: expo/expo-github-action@v8
+      with:
+        expo-version: latest
+        eas-version: latest
+        # Note: token isn't strictly required just for testing/linting,
+        # but required if you intend to trigger EAS builds automatically.
+        token: ${{ secrets.EXPO_TOKEN }} 
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Verify Expo Configuration
+      run: npx expo prebuild --dry-run
