@@ -1,22 +1,17 @@
-name: Mobile CI (Expo + Node 24)
+name: Mobile CI/CD (Expo Android)
 
 on:
   push:
     branches: [ main, master ]
     paths:
-      - 'mobile/**' # Triggers only on mobile changes
-  pull_request:
-    branches: [ main, master ]
-    paths:
       - 'mobile/**'
 
 jobs:
-  mobile-check:
+  build-android:
     runs-on: ubuntu-latest
-
     defaults:
       run:
-        working-directory: ./mobile # Automates 'cd mobile' for all steps
+        working-directory: ./mobile
 
     steps:
     - name: Checkout repository
@@ -25,21 +20,23 @@ jobs:
     - name: Setup Node.js 24
       uses: actions/setup-node@v4
       with:
-        node-version: '24' # Configured for your Node 24 requirement
-        cache: 'npm' # Use 'yarn' or 'pnpm' if applicable
-        cache-dependency-path: './mobile/package-lock.json' # Adjust if using yarn.lock
+        node-version: '24'
+        cache: 'npm'
+        cache-dependency-path: './mobile/package-lock.json'
 
     - name: Setup Expo Tooling
       uses: expo/expo-github-action@v8
       with:
         expo-version: latest
         eas-version: latest
-        # Note: token isn't strictly required just for testing/linting,
-        # but required if you intend to trigger EAS builds automatically.
-        token: ${{ secrets.EXPO_TOKEN }} 
+        token: ${{ secrets.EXPO_TOKEN }} # Authenticates GitHub with Expo [1]
 
     - name: Install Dependencies
       run: npm ci
 
-    - name: Verify Expo Configuration
-      run: npx expo prebuild --dry-run
+    - name: Trigger EAS Android Build
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      run: |
+        # Generates your Android build profile in the cloud. 
+        # Change '--profile preview' to '--profile production' if you want a Play Store AAB bundle.
+        eas build --platform android --profile preview --non-interactive

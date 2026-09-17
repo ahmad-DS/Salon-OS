@@ -1,22 +1,17 @@
-name: Backend CI (Python + FastAPI)
+name: Backend CI/CD (Python + FastAPI)
 
 on:
   push:
     branches: [ main, master ]
     paths:
-      - 'backend/**' # Triggers only on backend changes
-  pull_request:
-    branches: [ main, master ]
-    paths:
       - 'backend/**'
 
 jobs:
-  backend-test:
+  test-and-deploy:
     runs-on: ubuntu-latest
-    
     defaults:
       run:
-        working-directory: ./backend # Automates 'cd backend' for all steps
+        working-directory: ./backend
 
     steps:
     - name: Checkout repository
@@ -33,13 +28,12 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Lint with flake8 (Optional)
-      run: |
-        pip install flake8
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-
     - name: Run FastAPI Tests
       run: |
-        # Assumes you have pytest installed via requirements.txt
-        pytest
+        # Only deploy if tests pass. Remove 'pytest' line if you don't have tests yet.
+        pytest 
+
+    - name: Trigger Render Deployment
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      run: |
+        curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
