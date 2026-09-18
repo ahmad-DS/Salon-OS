@@ -41,3 +41,14 @@ class AppointmentResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class CustomerAppointmentResponse(BaseModel):
+    id: int
+    service_id: int
+    service_name: str
+    appointment_date: date
+    start_time: time
+    end_time: time
+    status: str
+    price: int
+    duration_minutes: int

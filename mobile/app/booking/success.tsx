@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 
 import Button from "../../components/ui/Button";
@@ -34,6 +34,7 @@ export default function SuccessScreen() {
     date: string;
     startTime: string;
     duration?: string;
+    phone?: string;
   }>();
 
   return (
@@ -90,9 +91,25 @@ export default function SuccessScreen() {
 
       <View style={styles.bottom}>
         <Button
-          title="Back to home"
-          onPress={() => router.replace("/")}
+          title="View my appointments"
+          onPress={() =>
+            router.replace({
+              pathname: "/appointments",
+              params: {
+                phone: params.phone || "",
+              },
+            })
+          }
         />
+
+        <Pressable
+          style={styles.homeButton}
+          onPress={() => router.replace("/")}
+        >
+          <Text style={styles.homeButtonText}>
+            Back to home
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -238,4 +255,14 @@ const styles = StyleSheet.create({
   bottom: {
     marginTop: 20,
   },
+  homeButton: {
+  alignItems: "center",
+  paddingVertical: 16,
+},
+
+homeButtonText: {
+  fontSize: 14,
+  fontWeight: "700",
+  color: colors.textSecondary,
+},
 });

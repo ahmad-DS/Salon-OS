@@ -55,6 +55,15 @@ export default function HomeScreen() {
         </Text>
       </Pressable>
 
+      <Pressable
+        style={styles.appointmentsLink}
+        onPress={() => router.push("/appointments")}
+      >
+        <Text style={styles.appointmentsLinkText}>
+          View my appointments →
+        </Text>
+      </Pressable>
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>
           Our services
@@ -286,5 +295,16 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     fontSize: 14,
     marginBottom: 10,
+  },
+
+  appointmentsLink: {
+    alignItems: "center",
+    marginTop: 16,
+  },
+
+  appointmentsLinkText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.primary,
   },
 });

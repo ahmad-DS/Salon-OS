@@ -17,3 +17,15 @@ export type AppointmentResponse = {
   price_at_booking: number;
   duration_at_booking: number;
 };
+
+export type CustomerAppointment = {
+  id: number;
+  service_id: number;
+  service_name: string;
+  appointment_date: string;
+  start_time: string;
+  end_time: string;
+  status: "pending" | "confirmed" | "cancelled" | "completed";
+  price: number;
+  duration_minutes: number;
+};

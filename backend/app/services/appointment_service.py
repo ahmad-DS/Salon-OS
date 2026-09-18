@@ -116,3 +116,31 @@ class AppointmentService:
         self.db.refresh(appointment)
 
         return appointment
+
+    def get_customer_appointments(
+        self,
+        phone: str,
+    ):
+        clean_phone = "".join(character for character in phone if character.isdigit())
+
+        if len(clean_phone) != 10:
+            raise ValueError("Please enter a valid 10-digit phone number")
+
+        appointments = self.appointment_repository.get_by_customer_phone(
+            clean_phone
+        )
+
+        return [
+            {
+                "id": appointment.id,
+                "service_id": appointment.service_id,
+                "service_name": service.name,
+                "appointment_date": appointment.appointment_date,
+                "start_time": appointment.start_time,
+                "end_time": appointment.end_time,
+                "status": appointment.status,
+                "price": appointment.price_at_booking,
+                "duration_minutes": appointment.duration_at_booking,
+            }
+            for appointment, service in appointments
+        ]

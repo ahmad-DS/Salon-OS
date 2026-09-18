@@ -94,6 +94,7 @@ export default function DetailsScreen() {
           startTime: params.startTime,
           duration: params.duration || "",
           price: params.price || "",
+          phone: cleanPhone,
         },
       });
     } catch (error) {

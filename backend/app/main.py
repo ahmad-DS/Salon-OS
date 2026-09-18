@@ -1,5 +1,7 @@
+import os
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.api.services import router as services_router
@@ -14,6 +16,28 @@ from app.db.database import engine
 app = FastAPI(
     title="Salon API",
     version="1.0.0",
+)
+
+origins = [
+    "http://localhost",
+    "http://localhost:8081",     # Default Metro Bundler port for Expo web
+    "http://127.0.0.1:8081",
+]
+
+production_frontend_url = os.getenv("FRONTEND_URL")
+if production_frontend_url:
+    origins.append(production_frontend_url)
+
+if os.getenv("ENVIRONMENT") == "development":
+    origins = ["*"]
+
+# 4. Add the CORS middleware to your application
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allows all headers (Authorization, Content-Type, etc.)
 )
 
 app.include_router(services_router)
