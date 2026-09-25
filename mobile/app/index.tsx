@@ -1,10 +1,4 @@
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { router } from "expo-router";
 
@@ -13,17 +7,12 @@ import { theme } from "../constants/theme";
 
 export default function HomeScreen() {
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-    >
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <View>
           <Text style={styles.eyebrow}>WELCOME TO</Text>
 
-          <Text style={styles.logo}>
-            Aura
-          </Text>
+          <Text style={styles.logo}>Aura</Text>
         </View>
 
         <Pressable style={styles.iconButton}>
@@ -32,42 +21,37 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.hero}>
-        <Text style={styles.heroTitle}>
-          Look good.
-        </Text>
+        <Text style={styles.heroTitle}>Look good.</Text>
 
-        <Text style={styles.heroTitle}>
-          Feel confident.
-        </Text>
+        <Text style={styles.heroTitle}>Feel confident.</Text>
 
         <Text style={styles.heroSubtitle}>
-          Premium beauty & grooming
-          experiences made for you.
+          Premium beauty & grooming experiences made for you.
         </Text>
       </View>
 
       <Pressable
-        style={styles.button}
+        style={({ pressed }) => [
+          styles.button,
+          pressed && styles.buttonPressed,
+        ]}
         onPress={() => router.push("/services")}
       >
-        <Text style={styles.buttonText}>
-          Book an appointment
-        </Text>
+        <Text style={styles.buttonText}>Book an appointment</Text>
       </Pressable>
 
       <Pressable
-        style={styles.appointmentsLink}
+        style={({ pressed }) => [
+          styles.appointmentsLink,
+          pressed && styles.linkPressed,
+        ]}
         onPress={() => router.push("/appointments")}
       >
-        <Text style={styles.appointmentsLinkText}>
-          View my appointments →
-        </Text>
+        <Text style={styles.appointmentsLinkText}>View my appointments →</Text>
       </Pressable>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>
-          Our services
-        </Text>
+        <Text style={styles.sectionTitle}>Our services</Text>
 
         <ServicePreview
           title="Classic Haircut"
@@ -81,30 +65,41 @@ export default function HomeScreen() {
           price="₹500"
         />
 
-        <ServicePreview
-          title="Hair Spa"
-          duration="60 min"
-          price="₹800"
-        />
+        <ServicePreview title="Hair Spa" duration="60 min" price="₹800" />
       </View>
 
       <View style={styles.infoCard}>
-        <Text style={styles.infoTitle}>
-          Visit us
-        </Text>
+        <Text style={styles.infoTitle}>Visit us</Text>
 
-        <Text style={styles.infoText}>
-          📍 Main Road, Your City
-        </Text>
+        <Text style={styles.infoText}>📍 Main Road, Your City</Text>
 
-        <Text style={styles.infoText}>
-          🕐 Open daily · 10 AM – 8 PM
-        </Text>
+        <Text style={styles.infoText}>🕐 Open daily · 10 AM – 8 PM</Text>
 
-        <Text style={styles.infoText}>
-          📞 +91 98765 43210
-        </Text>
+        <Text style={styles.infoText}>📞 +91 98765 43210</Text>
       </View>
+
+      {/* Staff access */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.staffLogin,
+          pressed && styles.staffLoginPressed,
+        ]}
+        onPress={() => router.push("/admin")}
+      >
+        <View style={styles.staffIconContainer}>
+          <Text style={styles.staffIcon}>♙</Text>
+        </View>
+
+        <View style={styles.staffLoginContent}>
+          <Text style={styles.staffLoginTitle}>Staff login</Text>
+
+          <Text style={styles.staffLoginSubtitle}>Salon owner & staff</Text>
+        </View>
+
+        <Text style={styles.staffArrow}>›</Text>
+      </Pressable>
+
+      <Text style={styles.footerText}>Aura Beauty & Grooming</Text>
     </ScrollView>
   );
 }
@@ -125,18 +120,12 @@ function ServicePreview({
       </View>
 
       <View style={styles.serviceInfo}>
-        <Text style={styles.serviceName}>
-          {title}
-        </Text>
+        <Text style={styles.serviceName}>{title}</Text>
 
-        <Text style={styles.serviceMeta}>
-          {duration}
-        </Text>
+        <Text style={styles.serviceMeta}>{duration}</Text>
       </View>
 
-      <Text style={styles.servicePrice}>
-        {price}
-      </Text>
+      <Text style={styles.servicePrice}>{price}</Text>
     </View>
   );
 }
@@ -149,7 +138,7 @@ const styles = StyleSheet.create({
 
   content: {
     padding: theme.spacing.lg,
-    paddingBottom: 48,
+    paddingBottom: 32,
   },
 
   header: {
@@ -218,10 +207,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
+  buttonPressed: {
+    opacity: 0.85,
+  },
+
   buttonText: {
     color: colors.white,
     fontSize: 16,
     fontWeight: "700",
+  },
+
+  appointmentsLink: {
+    alignItems: "center",
+    marginTop: 16,
+    paddingVertical: 6,
+  },
+
+  linkPressed: {
+    opacity: 0.6,
+  },
+
+  appointmentsLinkText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.primary,
   },
 
   section: {
@@ -297,14 +306,65 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  appointmentsLink: {
+  /*
+   * Staff login
+   *
+   * Intentionally subtle so it doesn't compete
+   * with the customer booking experience.
+   */
+  staffLogin: {
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 16,
+    marginTop: 28,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
   },
 
-  appointmentsLinkText: {
+  staffLoginPressed: {
+    opacity: 0.6,
+  },
+
+  staffIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.surface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  staffIcon: {
+    fontSize: 18,
+    color: colors.textSecondary,
+  },
+
+  staffLoginContent: {
+    flex: 1,
+    marginLeft: 12,
+  },
+
+  staffLoginTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: colors.primary,
+    color: colors.textSecondary,
+  },
+
+  staffLoginSubtitle: {
+    fontSize: 12,
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+
+  staffArrow: {
+    fontSize: 24,
+    color: colors.textMuted,
+    marginRight: 4,
+  },
+
+  footerText: {
+    textAlign: "center",
+    fontSize: 11,
+    color: colors.textMuted,
+    marginTop: 20,
   },
 });

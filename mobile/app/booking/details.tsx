@@ -216,7 +216,6 @@ export default function DetailsScreen() {
           <Text style={styles.terms}>
             By confirming, you agree to our appointment terms.
           </Text>
-          <Text>{JSON.stringify(params)}</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
