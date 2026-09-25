@@ -113,7 +113,7 @@ export function useAuth() {
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, []);
 
   return {
     isAuthenticated: authState.isAuthenticated,
