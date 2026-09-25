@@ -10,7 +10,6 @@ export default function AdminLayout() {
   } = useAuth();
 
   const segments = useSegments();
-  console.log("segments", segments)
 
   /**
    * While we are checking local storage / SecureStore,
@@ -33,7 +32,7 @@ export default function AdminLayout() {
    * /admin/login
    * segments = ["admin", "login"]
    */
-  const isLoginPage = segments[0] === "login";
+  const isLoginPage = (segments as string[])[1] === "login";
 
   /**
    * User is not authenticated.
