@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from sqlalchemy.orm import Session
 
@@ -9,6 +9,12 @@ from app.repositories.customer_repository import CustomerRepository
 from app.repositories.service_repository import ServiceRepository
 from app.schemas.appointment import CreateAppointmentRequest
 
+VALID_STATUS_TRANSITIONS = {
+    "pending": {"confirmed", "cancelled"},
+    "confirmed": {"completed", "cancelled"},
+    "cancelled": set(),
+    "completed": set(),
+}
 
 class AppointmentService:
 
@@ -144,3 +150,56 @@ class AppointmentService:
             }
             for appointment, service in appointments
         ]
+
+    def get_admin_appointments(self, appointment_date: date):
+        rows = self.appointment_repository.get_admin_appointments_by_date(
+            appointment_date
+        )
+
+        return [
+        {
+            "id": appointment.id,
+            "customer_name": customer.name,
+            "phone": customer.phone,
+            "service_name": service.name,
+            "appointment_date": appointment.appointment_date,
+            "start_time": appointment.start_time,
+            "end_time": appointment.end_time,
+            "status": appointment.status,
+            "price": appointment.price_at_booking,
+            "duration_minutes": appointment.duration_at_booking,
+        }
+        for appointment, customer, service in rows
+    ]
+
+    def update_appointment_status(
+        self,
+        appointment_id: int,
+        new_status: str,
+    ):
+        appointment = self.appointment_repository.get_by_id(
+        appointment_id
+    )
+
+        if not appointment:
+            raise LookupError("Appointment not found")
+
+        current_status = appointment.status
+
+        allowed_statuses = VALID_STATUS_TRANSITIONS.get(
+            current_status,
+            set(),
+        )
+
+        if new_status not in allowed_statuses:
+            raise ValueError(
+                f"Cannot change appointment from "
+                f"{current_status} to {new_status}"
+            )
+
+        appointment.status = new_status
+
+        self.db.commit()
+        self.db.refresh(appointment)
+
+        return appointment

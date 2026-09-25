@@ -1,3 +1,4 @@
+from typing import Literal
 from datetime import date, time
 
 from pydantic import BaseModel, Field
@@ -52,3 +53,18 @@ class CustomerAppointmentResponse(BaseModel):
     status: str
     price: int
     duration_minutes: int
+
+class AdminAppointmentResponse(BaseModel):
+    id: int
+    customer_name: str
+    phone: str
+    service_name: str
+    appointment_date: date
+    start_time: time
+    end_time: time
+    status: str
+    price: int
+    duration_minutes: int
+
+class UpdateAppointmentStatusRequest(BaseModel):
+    status: Literal["confirmed", "cancelled", "completed"]

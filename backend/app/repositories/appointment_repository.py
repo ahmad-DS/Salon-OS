@@ -60,3 +60,35 @@ class AppointmentRepository:
         )
 
         return list(self.db.execute(statement).all())
+
+    def get_by_id(self, appointment_id: int) -> Optional[Appointment]:
+        statement = (
+            select(Appointment)
+            .where(Appointment.id == appointment_id)
+        )
+
+        return self.db.scalar(statement)
+
+    def get_admin_appointments_by_date(
+        self,
+        appointment_date: date,
+    ):
+        statement = (
+        select(Appointment, Customer, Service)
+        .join(
+            Customer,
+            Appointment.customer_id == Customer.id,
+        )
+        .join(
+            Service,
+            Appointment.service_id == Service.id,
+        )
+        .where(
+            Appointment.appointment_date == appointment_date
+        )
+        .order_by(
+            Appointment.start_time
+        )
+    )
+
+        return list(self.db.execute(statement).all())

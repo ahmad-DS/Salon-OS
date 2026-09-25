@@ -9,6 +9,7 @@ from app.api.auth import router as auth_router
 from app.api.admin_services import router as admin_services_router
 from app.api.appointments import router as appointments_router
 from app.api.availability import router as availability_router
+from app.api.admin_appointments import router as admin_appointments_router
 
 from app.db.database import engine
 
@@ -22,6 +23,7 @@ origins = [
     "http://localhost",
     "http://localhost:8081",     # Default Metro Bundler port for Expo web
     "http://127.0.0.1:8081",
+    "http://192.168.31.134"
 ]
 
 production_frontend_url = os.getenv("FRONTEND_URL")
@@ -45,6 +47,7 @@ app.include_router(auth_router)
 app.include_router(admin_services_router)
 app.include_router(appointments_router)
 app.include_router(availability_router)
+app.include_router(admin_appointments_router)
 
 @app.get("/health")
 def health_check():
