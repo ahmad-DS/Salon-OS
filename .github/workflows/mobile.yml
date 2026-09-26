@@ -29,7 +29,7 @@ jobs:
       with:
         expo-version: latest
         eas-version: latest
-        token: ${{ secrets.EXPO_TOKEN }} # Authenticates GitHub with Expo [1]
+        token: ${{ secrets.EXPO_TOKEN }}
 
     - name: Install Dependencies
       run: npm ci
@@ -37,8 +37,6 @@ jobs:
     - name: Trigger EAS Android Build
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       run: |
-        # Generates your Android build profile in the cloud. 
-        # Change '--profile preview' to '--profile production' if you want a Play Store AAB bundle.
         eas build --platform android --profile preview --non-interactive
 
   deploy-web:
@@ -47,12 +45,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v25
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-version: latest
-        vercel-args: '--prod' # Triggers a production deployment
-        working-directory: ./mobile # Targets your Expo application subdirectory
+        node-version: '24'
+
+    - name: Install Vercel CLI
+      run: npm install --global vercel@latest
+
+    - name: Deploy to Vercel
+      working-directory: ./mobile
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      run: vercel deploy --prod --token "$VERCEL_TOKEN" --yes
