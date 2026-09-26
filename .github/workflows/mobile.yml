@@ -1,4 +1,4 @@
-name: Mobile CI/CD (Expo Android)
+name: Mobile CI/CD (Expo Android & Vercel Web)
 
 on:
   push:
@@ -40,3 +40,18 @@ jobs:
         # Generates your Android build profile in the cloud. 
         # Change '--profile preview' to '--profile production' if you want a Play Store AAB bundle.
         eas build --platform android --profile preview --non-interactive
+
+  deploy-web:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod' # Triggers a production deployment
+        working-directory: ./mobile # Targets your Expo application subdirectory
