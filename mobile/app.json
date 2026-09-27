@@ -4,7 +4,7 @@
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/salon-icon.png",
+    "icon": "./assets/salon-icon3.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/salon-icon.png",
+        "foregroundImage": "./assets/salon-icon3.png",
         "backgroundColor": "#F9F8F6"
       },
       "edgeToEdgeEnabled": true,
@@ -28,7 +28,7 @@
       "bundler": "metro",
       "output": "static",
       "baseUrl": "/",
-      "favicon": "./assets/salon-icon.png",
+      "favicon": "./assets/salon-icon3.png",
       "themeColor": "#F9F8F6",
       "backgroundColor": "#F9F8F6"
     },
